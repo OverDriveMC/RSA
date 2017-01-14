@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintWriter;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -16,6 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import org.apache.commons.codec.binary.Base64;
 
 import com.tsinghua.mengc.math.MyBigInteger;
 import com.tsinghua.mengc.util.PrimeUtil;
@@ -96,6 +99,7 @@ public class EncryPanel extends JPanel{
 		scrolB.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		inputPanel.add(scrolB);
 		JButton savePK=new JButton("Save Public Key");
+		savePK.addActionListener(new SavePublicKeyListener());
 		savePK.setBounds(330,300,130,25);
 		inputPanel.add(savePK);
 		inputPanel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -171,6 +175,7 @@ public class EncryPanel extends JPanel{
 		inputPanel.add(scrolQ);
 		
 		JButton savePK=new JButton("Save Private Key");
+		savePK.addActionListener(new SavePrivateKeyListener());
 		savePK.setBounds(330,345,130,25);
 		inputPanel.add(savePK);
 		inputPanel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -193,6 +198,7 @@ public class EncryPanel extends JPanel{
 		inputPanel.add(encryptedMessageB);
 		
 		JButton saveMessageB=new JButton("Save Message");
+		saveMessageB.addActionListener(new SaveMessageListener());
 		saveMessageB.setBounds(330,10,130,25);
 		inputPanel.add(saveMessageB);
 		encryptedMessage.setLineWrap(true);
@@ -273,6 +279,60 @@ public class EncryPanel extends JPanel{
 			String orimessage=message.getText();
 			String encrypt=PrimeUtil.encryptString(orimessage,n, b);
 			encryptedMessage.setText(encrypt);
+		}
+		
+	}
+	class SavePublicKeyListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser chooser=new JFileChooser();
+			int result=chooser.showSaveDialog(encryptedMessage);
+			if(result==JFileChooser.APPROVE_OPTION){
+				try(PrintWriter pw=new PrintWriter(chooser.getSelectedFile())){
+					String publicKey=n.toString()+"#"+b.toString();
+					String res=Base64.encodeBase64String(publicKey.getBytes());
+					pw.println(res);
+					JOptionPane.showMessageDialog(encryptedMessage, "保存成功!");
+				}catch(Exception ex){
+					JOptionPane.showMessageDialog(encryptedMessage, "保存失败!");
+				}
+			}
+		}
+	}
+	
+	class SavePrivateKeyListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser chooser=new JFileChooser();
+			int result=chooser.showSaveDialog(encryptedMessage);
+			if(result==JFileChooser.APPROVE_OPTION){
+				try(PrintWriter pw=new PrintWriter(chooser.getSelectedFile())){
+					String publicKey=n.toString()+"#"+a.toString();
+					String res=Base64.encodeBase64String(publicKey.getBytes());
+					pw.println(res);
+					JOptionPane.showMessageDialog(encryptedMessage, "保存成功!");
+				}catch(Exception ex){
+					JOptionPane.showMessageDialog(encryptedMessage, "保存失败!");
+				}
+			}
+		}
+	}
+	
+	class SaveMessageListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			JFileChooser chooser=new JFileChooser();
+			int result=chooser.showSaveDialog(encryptedMessage);
+			if(result==JFileChooser.APPROVE_OPTION){
+				try(PrintWriter pw=new PrintWriter(chooser.getSelectedFile())){
+					String encrypedMessage=encryptedMessage.getText();
+					pw.println(encrypedMessage);
+					JOptionPane.showMessageDialog(encryptedMessage, "保存成功!");
+				}catch(Exception ex){
+					JOptionPane.showMessageDialog(encryptedMessage, "保存失败!");
+				}
+			}
 		}
 		
 	}
