@@ -187,7 +187,7 @@ public class EncryPanel extends JPanel{
 	public void initrbPanel(){
 		rbPanel.setLayout(null);
 		JLabel messageL=new JLabel("Encrypted Message");
-		messageL.setBounds(5,5,100,25);
+		messageL.setBounds(5,5,130,25);
 		rbPanel.add(messageL);
 		JPanel inputPanel=new JPanel();
 		inputPanel.setLayout(null);

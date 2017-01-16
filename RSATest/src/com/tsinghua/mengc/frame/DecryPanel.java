@@ -97,7 +97,6 @@ public class DecryPanel extends JPanel {
 		inputPanel.add(loadEncryptedTextB);
 		JScrollPane scrol=new JScrollPane(message);
 		message.setLineWrap(true);
-		message.setEditable(false);
 		scrol.setBounds(13,45,450,300);
 		scrol.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		inputPanel.add(scrol);
@@ -238,10 +237,14 @@ public class DecryPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String publicKey=valueN.getText();
-			String pun=new String(Base64.decodeBase64(publicKey)).split("#")[0];
+			String pun=null;
+			if(publicKey!=null && !publicKey.trim().equals("")){
+				pun=new String(Base64.decodeBase64(publicKey)).split("#")[0];
+			}
 			String privateKey=valueA.getText();
 			String prn=new String(Base64.decodeBase64(privateKey)).split("#")[0];
-			if(!pun.equals(prn)){
+			if(pun!=null && !pun.equals(prn)){
+				System.out.println(pun);
 				JOptionPane.showMessageDialog(valueN, "选择公钥私钥不配套!");
 				return ;
 			}
